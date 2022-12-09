@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('Dept');
+            $table->foreignId("department_id")->constrained()->onDelete('cascade');
             $table->string('session');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
