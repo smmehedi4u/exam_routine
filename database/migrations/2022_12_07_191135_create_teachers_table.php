@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('contact');
             $table->string('email');
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes(); 
         });
     }
 
