@@ -82,4 +82,19 @@ class BatchController extends Controller
     {
         //
     }
+
+    public function byDept(Request $request, $dept_id)
+    {
+        $batches = Batch::where("department_id", $dept_id)->orderBy("id", "desc")->get();
+
+        $tem = "<option value=''>Select Any </option>";
+        foreach ($batches as $batch) {
+            $tem .= "<option value='" . $batch->id . "'>" . $batch->name . "</option>";
+        }
+
+        return response()->json([
+            "data" => $tem,
+            "success" => true
+        ]);
+    }
 }
