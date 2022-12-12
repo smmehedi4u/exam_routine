@@ -3,30 +3,23 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
-        name="viewport">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>@yield('title') &mdash; {{ config('app.name', 'Laravel') }}</title>
 
     <!-- General CSS Files -->
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer" />
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @stack('style')
 
     <!-- Template CSS -->
-    <link rel="stylesheet"
-        href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
 
     <!-- Start GA -->
-    <script async
-        src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -51,7 +44,43 @@
             @include('components.sidebar')
 
             <!-- Content -->
-            @yield('main')
+            <div class="main-content">
+
+                <section class="section">
+                    <div class="section-header">
+                        <h5>@yield('title')</h5>
+                    </div>
+
+                    <div class="section-body">
+                        @if (Session::has("success"))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{Session::get("success")}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+
+                          </div>
+                        @elseif (Session::has("error"))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{Session::get("error")}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                        @elseif(Session::has("warning"))
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{Session::get("warning")}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+
+                        @endif
+
+                        @yield('main')
+                    </div>
+                </section>
+            </div>
 
             <!-- Footer -->
             @include('components.footer')

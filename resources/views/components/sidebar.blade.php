@@ -18,13 +18,6 @@ $links = [
                     ['href' => 'department.index', 'text' => 'List', 'has_permission' => true],
                 ],
             ],
-        ],
-        'text' => 'Department',
-        'is_multi' => true,
-        'has_permission' => true,
-],
-    [
-        'href' => [
             [
                 'section_text' => 'Batch',
                 'section_list' => [
@@ -33,10 +26,31 @@ $links = [
                 ],
             ],
         ],
-        'text' => 'Batch',
+        'text' => 'Department',
         'is_multi' => true,
         'has_permission' => true,
-    ]
+],
+    [
+        'href' => [
+            [
+                'section_text' => 'Exam',
+                'section_list' => [
+                    ['href' => 'exam.create', 'text' => 'Add', 'has_permission' => true],
+                    ['href' => 'exam.index', 'text' => 'List', 'has_permission' => true],
+                ],
+            ],
+            [
+                'section_text' => 'Routine',
+                'section_list' => [
+                    ['href' => 'routine.create', 'text' => 'Add', 'has_permission' => true],
+                    ['href' => 'routine.index', 'text' => 'List', 'has_permission' => true],
+                ],
+            ],
+        ],
+        'text' => 'Routine',
+        'is_multi' => true,
+        'has_permission' => true,
+]
 ];
 $navigation_links = json_decode(json_encode($links), false);
 @endphp
