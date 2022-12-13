@@ -1,6 +1,12 @@
 <?php
 
+use App\Http\Controllers\BatchController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoutineController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,14 +24,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    Route::resource("department", DepartmentController::class);
+
+    Route::resource("batch", BatchController::class);
+    Route::prefix("/batch")->name("batch.")->group(function () {
+        Route::get("/bydept/{dept_id}", [BatchController::class, "byDept"])->name("bydept");
+    });
+
+
+    Route::resource("exam", ExamController::class);
+    Route::resource("routine", RoutineController::class);
+    Route::resource("subject", SubjectController::class);
+    Route::resource("teacher", TeacherController::class);
 });
 
 require __DIR__.'/auth.php';
