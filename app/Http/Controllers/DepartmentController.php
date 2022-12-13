@@ -14,7 +14,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        return view("department.list");
     }
 
     /**
@@ -24,7 +24,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view("department.add");
     }
 
     /**
