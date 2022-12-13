@@ -35,7 +35,13 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource("department", DepartmentController::class);
+
     Route::resource("batch", BatchController::class);
+    Route::prefix("/batch")->name("batch.")->group(function () {
+        Route::get("/bydept/{dept_id}", [BatchController::class, "byDept"])->name("bydept");
+    });
+
+
     Route::resource("exam", ExamController::class);
     Route::resource("routine", RoutineController::class);
     Route::resource("subject", SubjectController::class);

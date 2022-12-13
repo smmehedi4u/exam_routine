@@ -23,11 +23,12 @@ class ExampleTest extends TestCase
 
     public function test_after_login()
     {
-        $user = User::factory()->create([
+        $user = User::factory()->create(['email' => 'test@gmail.com',
             'email_verified_at' => null,
         ]);
         $response = $this->actingAs($user)->get('/');
 
         $response->assertStatus(200);
+        $user->delete();
     }
 }

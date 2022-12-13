@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Batch;
+use App\Models\Department;
 use App\Models\Exam;
 use Illuminate\Http\Request;
 
@@ -24,7 +26,9 @@ class ExamController extends Controller
      */
     public function create()
     {
-        //
+        $depts = Department::orderBy("id", "desc")->get();
+        // dd($batches);
+        return view("exam.add", compact("depts"));
     }
 
     /**
