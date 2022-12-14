@@ -11,7 +11,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use PDF;
 class ExamController extends Controller
 {
     /**
@@ -120,7 +120,7 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function edit(Exam $exam,$id)
+    public function edit(Exam $exam)
     {
 
 
@@ -144,7 +144,7 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Exam $exam)
     {
 
         $validated = $request->validate([
@@ -236,7 +236,12 @@ class ExamController extends Controller
 
     public function print(Exam $exam)
     {
-        return view("exam.print", compact("exam"));
+        $data = [
+            "exam" => $exam
+        ];
+        $pdf = PDF::loadView('exam.print', $data);
+        return $pdf->stream('document.pdf');
+        // return view("exam.print", compact("exam"));
 
     }
 }

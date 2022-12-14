@@ -28,7 +28,7 @@ href="{{ asset('library/select2/dist/css/select2.min.css') }}">
             </div>
             <div class="form-group">
                 <label>Department</label>
-                <select class="form-control department select2">
+                <select name="department_id" class="form-control department select2">
                     <option value="">Select One</option>
                     @foreach ($departments as $dept)
                         <option value="{{ $dept->id }}">{{ $dept->name }}</option>
