@@ -16,7 +16,8 @@ class ExamController extends Controller
      */
     public function index()
     {
-        //
+        $exams = Exam::all();
+        return view('exam.list', compact('exams'));
     }
 
     /**
@@ -39,7 +40,35 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'year' => 'required',
+            'type' => 'required',
+            'batch_id' => 'required',
+            'semester' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $exam = new Exam();
+
+        $exam->name = $request->name;
+        $exam->year = $request->year;
+        $exam->type = $request->type;
+        $exam->batch_id = $request->batch_id;
+        $exam->semester = $request->semester;
+        $exam->added_by = Auth::user()->id;
+        $exam->save();
+
+        $request->session()->flash('success', 'Exam added successfully!');
+
+        return back();
     }
 
     /**
@@ -50,7 +79,7 @@ class ExamController extends Controller
      */
     public function show(Exam $exam)
     {
-        //
+        return view('exam.show',compact('exam'));
     }
 
     /**
@@ -59,9 +88,10 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function edit(Exam $exam)
+    public function edit(Exam $exam,$id)
     {
-        //
+        $exam = Exam::find($id);
+        return view('exam.edit',compact('exam'));
     }
 
     /**
@@ -71,9 +101,35 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Exam $exam)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'year' => 'required',
+            'type' => 'required',
+            'batch_id' => 'required',
+            'semester' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $exam = Exam::find($id);
+
+        $exam->name = $request->name;
+        $exam->year = $request->year;
+        $exam->type = $request->type;
+        $exam->batch_id = $request->batch_id;
+        $exam->semester = $request->semester;
+        $exam->added_by = Auth::user()->id;
+        $exam->save();
+
+        return redirect()->route('exam.list')->with('success','Exam update successfully');
     }
 
     /**
@@ -82,8 +138,10 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Exam $exam)
+    public function destroy(Exam $exam, $id)
     {
-        //
+        $exam = Exam::find($id);
+        $exam->delete();
+        return redirect()->route('exam.list')->with('success','Exam has been deleted successfully');
     }
 }
