@@ -34,17 +34,28 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
+
     Route::resource("department", DepartmentController::class);
 
-    Route::resource("batch", BatchController::class);
+
+
     Route::prefix("/batch")->name("batch.")->group(function () {
         Route::get("/bydept/{dept_id}", [BatchController::class, "byDept"])->name("bydept");
     });
+    Route::resource("batch", BatchController::class);
 
 
+    Route::prefix("/exam")->name("exam.")->group(function () {
+        Route::get("/print/{exam}", [ExamController::class, "print"])->name("print");
+    });
     Route::resource("exam", ExamController::class);
+
+
     Route::resource("routine", RoutineController::class);
     Route::resource("subject", SubjectController::class);
+    Route::prefix("/subject")->name("subject.")->group(function () {
+        Route::get("/bydept/{dept_id}", [SubjectController::class, "byDept"])->name("bydept");
+    });
     Route::resource("teacher", TeacherController::class);
 });
 

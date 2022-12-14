@@ -10,7 +10,7 @@ class Routine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'exam_name',
+        'exam_id',
         'subject_id',
         'exam_date',
         'exam_time',
@@ -19,6 +19,10 @@ class Routine extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class);
     }
 
     public function exam_duties()

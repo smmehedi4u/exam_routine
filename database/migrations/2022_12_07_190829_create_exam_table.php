@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('exam', function (Blueprint $table) {
+        Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('year');
+            $table->year('exam_year');
             $table->string('type');
             $table->foreignId("batch_id")->constrained()->onDelete('cascade');
+            $table->string('year');
             $table->string('semester');
             $table->timestamps();
             $table->softDeletes();

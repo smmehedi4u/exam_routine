@@ -20,6 +20,11 @@ class Department extends Model
         return $this->hasMany(Batch::class);
     }
 
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
+
     public function teacher()
     {
         return $this->hasMany(Teacher::class);
