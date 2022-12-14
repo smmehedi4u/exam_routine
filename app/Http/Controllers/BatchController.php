@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Batch;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class BatchController extends Controller
      */
     public function index()
     {
-        //
+        $batches = Batch::all();
+        return view("batch.list", compact('batches'));
     }
 
     /**
@@ -24,7 +26,8 @@ class BatchController extends Controller
      */
     public function create()
     {
-        //
+        $departments = Department::all();
+        return view("batch.add", compact('departments'));
     }
 
     /**
@@ -35,7 +38,30 @@ class BatchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'department_id' => 'required',
+            'session' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $batches = new Batch();
+
+        $batches->name = $request->name;
+        $batches->department_id = $request->department_id;
+        $batches->session = $request->session;
+        $batches->save();
+
+        $request->session()->flash('success', 'Batch added successfully!');
+
+        return back();
     }
 
     /**
@@ -46,7 +72,7 @@ class BatchController extends Controller
      */
     public function show(Batch $batch)
     {
-        //
+        return view('batch.show');
     }
 
     /**
@@ -67,9 +93,30 @@ class BatchController extends Controller
      * @param  \App\Models\Batch  $batch
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Batch $batch)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'department_id' => 'required',
+            'session' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $batches = Batch::find($id);
+
+        $batches->name = $request->name;
+        $batches->department_id = $request->department_id;
+        $batches->session = $request->session;
+        $batches->save();
+
+        return redirect()->route('batch.list')->with('success','Batch update successfully');
     }
 
     /**
@@ -80,7 +127,8 @@ class BatchController extends Controller
      */
     public function destroy(Batch $batch)
     {
-        //
+        $batch->delete();
+        return redirect()->back()->with("success","Deleted");
     }
 
     public function byDept(Request $request, $dept_id)
