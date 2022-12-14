@@ -145,10 +145,6 @@
 
 
 <body>
-    <div style="text-align:center;">
-        {{-- <button onclick="close_window()">পূর্বে</button> --}}
-        <button id="btnPrint">Print</button>
-    </div>
     <div id="print_area">
         <div style="text-align:center;">
             <h4>{{ $exam->type }}-{{ $exam->exam_year }}</h4>
@@ -162,7 +158,7 @@
             style="width:100%;border-collapse:collapse;text-align:center;margin:15px 10px;">
             <thead>
                 <tr>
-                    <th style="padding: 10px;" colspan="4">Department of {{ $exam->batch->department->name }}</th>
+                    <th style="padding: 10px;" colspan="3">Department of {{ $exam->batch->department->name }}</th>
                 </tr>
                 <tr>
                     <th style="padding: 10px;">Name</th>
