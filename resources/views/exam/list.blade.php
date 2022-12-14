@@ -4,14 +4,17 @@
 
 @push('style')
     <!-- CSS Libraries -->
+
     <link rel="stylesheet" href="{{ asset('library/datatables/media/css/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('library/datatables/media/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('library/datatables/media/css/select.bootstrap4.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('library/datatables/media/css/jquery.dataTables.min.css') }}">
+
 @endpush
 
 @section('main')
+
 
 
     <div class="card">
@@ -72,6 +75,7 @@
             </div>
         </div>
     </div>
+
 
 @endsection
 

@@ -21,9 +21,11 @@ class ExamController extends Controller
      */
     public function index()
     {
+
         $exams = Exam::with("batch:id,name")->orderBy("id", "desc")->get();
         // dd($exams->toArray());
         return view("exam.list", compact("exams"));
+
     }
 
     /**
@@ -47,6 +49,7 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'exam_name' => 'required',
             'exam_year' => 'required',
@@ -97,6 +100,7 @@ class ExamController extends Controller
             DB::rollback();
             return redirect()->back()->withInput()->with("error", "Something going wrong." . $e);
         }
+
     }
 
     /**
@@ -107,7 +111,7 @@ class ExamController extends Controller
      */
     public function show(Exam $exam)
     {
-        //
+        return view('exam.show',compact('exam'));
     }
 
     /**
@@ -116,8 +120,9 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function edit(Exam $exam)
+    public function edit(Exam $exam,$id)
     {
+
 
         $depts = Department::orderBy("id", "desc")->get();
         $batches = Batch::where("department_id", $exam->batch->department_id)->orderBy("id", "desc")->get();
@@ -129,6 +134,7 @@ class ExamController extends Controller
         // dd($courses->toArray());
 
         return view("exam.edit", compact("exam", "depts", "teachers", "batches", "courses"));
+
     }
 
     /**
@@ -138,8 +144,9 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Exam $exam)
+    public function update(Request $request, $id)
     {
+
         $validated = $request->validate([
             'exam_name' => 'required',
             'exam_year' => 'required',
@@ -211,6 +218,7 @@ class ExamController extends Controller
             DB::rollback();
             return redirect()->back()->with("error", "Something going wrong." . $e);
         }
+
     }
 
     /**
@@ -219,8 +227,9 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Exam $exam)
+    public function destroy(Exam $exam, $id)
     {
+
         $exam->delete();
         return redirect()->back()->with("success", "Deleted Successfully.");
     }
@@ -228,5 +237,6 @@ class ExamController extends Controller
     public function print(Exam $exam)
     {
         return view("exam.print", compact("exam"));
+
     }
 }
