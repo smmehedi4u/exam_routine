@@ -4,64 +4,77 @@
 
 @push('style')
     <!-- CSS Libraries -->
-    <link rel="stylesheet"
-        href="{{ asset('library/datatables/media/css/datatables.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/datatables/media/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/datatables/media/css/select.bootstrap4.min.css') }}">
 
-    <link rel="stylesheet"
-        href="{{ asset('library/datatables/media/css/jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/datatables/media/css/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/datatables/media/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/datatables/media/css/select.bootstrap4.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('library/datatables/media/css/jquery.dataTables.min.css') }}">
+
 @endpush
 
 @section('main')
 
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
-                <div class="flex justify-between text-gray-700">
-                    <h4>All Exam</h4>
-                    <a href="{{ route('exam.add') }}"
-                        class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
-                        Add Exam </a>
-                </div>
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class="w-full text-sm text-left text-gray-500 ">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
+
+
+    <div class="card">
+        <div class="card-header">
+            {{-- <h4>HTML5 Form Basic</h4> --}}
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table-striped table" id="table-1">
+                    <thead>
+                        <tr>
+                            <th class="text-center">
+                                #
+                            </th>
+                            <th>Exam Name</th>
+                            <th>Exam Year</th>
+                            <th>Batch</th>
+                            <th>Year</th>
+                            <th>Semester</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $i = 1;
+                        @endphp
+                        @foreach ($exams as $exam)
                             <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    Exam Name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    <span class="sr-only">Action</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($exam as $exam)
-                            <tr class="bg-white border-b  ">
-                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                {{ $exam->name }}
+                                <td>
+                                    {{ $i++ }}
                                 </td>
-                                <td class="px-6 py-4 text-right">
-                                    <form action="{{ route('exam.destroy',$exam->id) }}" method="Post">
-                                    <a href="{{ route('exam.edit',$exam->id) }}" class="btn btn-success">Edit</a>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                <td>{{ $exam->name }}</td>
+                                <td class="align-middle">
+                                    {{ $exam->exam_year }}
+                                </td>
+                                <td>
+                                    {{ $exam->batch->name }}
+                                </td>
+                                <td>{{ $exam->year }}</td>
+                                <td>
+                                    {{ $exam->semester }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('exam.print', $exam) }}" class="btn btn-sm btn-warning"><i class="fa-solid fa-print"></i></a>
+                                    <a href="{{ route('exam.edit', $exam) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen"></i></a>
+
+                                    <form action="{{ route('exam.destroy', $exam) }}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button onclick="return confirm('Are you want to delete?');"
+                                            class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
 
 
 @endsection

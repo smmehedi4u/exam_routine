@@ -14,12 +14,12 @@ class Subject extends Model
         'course_code',
         'year',
         'semester',
-        'batch_id',
+        'department_id',
     ];
 
-    public function batch()
+    public function department()
     {
-        return $this->belongsTo(Batch::class);
+        return $this->belongsTo(Department::class);
     }
 
     public function routine()

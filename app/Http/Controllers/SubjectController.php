@@ -82,4 +82,20 @@ class SubjectController extends Controller
     {
         //
     }
+
+    public function byDept(Request $request, $dept_id)
+    {
+        $courses = Subject::where("department_id", $dept_id)->get();
+        // dd($courses);
+
+        $tem = "<option value=''>Select Any </option>";
+        foreach ($courses as $course) {
+            $tem .= "<option value='" . $course->id . "'>" . $course->course_code . "-" . $course->course_name . "</option>";
+        }
+
+        return response()->json([
+            "data" => $tem,
+            "success" => true
+        ]);
+    }
 }

@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('routines', function (Blueprint $table) {
             $table->id();
-            $table->string('exam_name');
-            $table->foreignId("subject_id")->constrained()->onDelete('cascade');
             $table->date('exam_date');
-            $table->dateTime('exam_time');
+            $table->foreignId("exam_id")->constrained("exams")->onDelete('cascade');
+            $table->foreignId("subject_id")->constrained()->onDelete('cascade');
+
+            $table->time('exam_time');
             $table->timestamps();
             $table->softDeletes();
         });

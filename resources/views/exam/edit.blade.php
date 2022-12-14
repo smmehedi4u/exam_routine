@@ -9,8 +9,9 @@
 
 @section('main')
 
-<form action="{{route('exam.store')}}" method="POST">
+<form action="{{route('exam.update',$exam)}}" method="POST">
     @csrf
+    @method("PUT")
     <div class="card">
         <div class="card-header">
             {{-- <h4>HTML5 Form Basic</h4> --}}
@@ -19,14 +20,14 @@
 
             <div class="form-group">
                 <label>Exam Name</label>
-                <input required value="{{old("exam_name")}}" type="text" name="exam_name" class="form-control">
+                <input required value="{{$exam->name}}" type="text" name="exam_name" class="form-control">
                 @error("exam_name")
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label>Exam Year</label>
-                <input required value="{{old("exam_year")}}" type="text" name="exam_year" class="form-control yearpicker">
+                <input required value="{{$exam->exam_year}}" type="text" name="exam_year" class="form-control yearpicker">
                 @error("exam_year")
                     <div class="text-danger">{{$message}}</div>
                 @enderror
@@ -34,11 +35,10 @@
             <div class="form-group">
                 <label>Exam Type</label>
                 <select required  name="exam_type"  class="form-control">
-                    <option value="">Select One</option>
-                    <option @if (old("exam_type")=='1')
+                    <option @if ($exam->type=='1')
                         selected
                     @endif value="1">CT</option>
-                    <option @if (old("exam_type")=='2')
+                    <option @if ($exam->type=='2')
                         selected
                     @endif value="2">Semester Final</option>
                 </select>
@@ -49,9 +49,11 @@
             <div class="form-group">
                 <label>Department</label>
                 <select required name="department" class="form-control department select2">
-                    <option value="">Select One</option>
+
                     @foreach ($depts as $dept)
-                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                        <option @if ($exam->batch->department_id==$dept->id)
+                            selected
+                        @endif  value="{{ $dept->id }}">{{ $dept->name }}</option>
                     @endforeach
                 </select>
                 @error("department")
@@ -61,7 +63,11 @@
             <div class="form-group">
                 <label>Batch</label>
                 <select required name="batch" class="form-control batch select2">
-                    <option value="">Select One</option>
+                    @foreach ($batches as $batch)
+                        <option @if ($exam->batch_id==$batch->id)
+                            selected
+                        @endif  value="{{ $batch->id }}">{{ $batch->name }}</option>
+                    @endforeach
                 </select>
                 @error("batch")
                     <div class="text-danger">{{$message}}</div>
@@ -69,12 +75,13 @@
             </div>
             <div class="form-group">
                 <label>Year</label>
+
                 <select required name="year" class="form-control">
-                    <option value="">Select One</option>
-                    <option>01</option>
-                    <option>02</option>
-                    <option>03</option>
-                    <option>04</option>
+                    @for ($i=1;$i<5;$i++)
+                    <option @if ($exam->year==$i)
+                        selected
+                    @endif  value="{{ $i }}">{{ $i }}</option>
+                    @endfor
                 </select>
                 @error("year")
                     <div class="text-danger">{{$message}}</div>
@@ -84,20 +91,29 @@
             <div class="form-group">
                 <label>Semester</label>
                 <select name="semester" class="form-control">
-                    <option required value="">Select One</option>
-                    <option>01</option>
-                    <option>02</option>
+                    <option @if ($exam->semester=='1')
+                        selected
+                    @endif value="1">1</option>
+                    <option @if ($exam->semester=='2')
+                        selected
+                    @endif value="2">2</option>
                 </select>
                 @error("semester")
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>
             <hr>
+            @php
+                $i=0;
+            @endphp
+            @foreach ($exam->routines as $routine)
+
             <div class="row">
+                <input type="hidden" name="routine_id[{{$i}}]" value="{{$routine->id}}">
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Exam Date</label>
-                        <input required name="exam_date[0]" type="text" class="form-control datepicker">
+                        <input required value="{{$routine->exam_date}}" name="exam_date[{{$i}}]" type="text" class="form-control datepicker">
                     </div>
                     @error("exam_date")
                     <div class="text-danger">{{$message}}</div>
@@ -106,8 +122,12 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Course</label>
-                        <select required name="course[0]" class="form-control course select2">
-                            <option value="">Select One</option>
+                        <select required name="course[{{$i}}]" class="form-control course select2">
+                            @foreach ($courses as $course)
+                        <option @if ($routine->subject_id==$course->id)
+                            selected
+                        @endif  value="{{ $course->id }}">{{ $course->course_code }}-{{ $course->course_name }}</option>
+                    @endforeach
                         </select>
                         @error("course")
                     <div class="text-danger">{{$message}}</div>
@@ -117,9 +137,11 @@
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>Teacher</label>
-                        <select required name="teacher[0][]" multiple="" class="form-control teachers select2">
+                        <select required name="teacher[{{$i}}][]" multiple="" class="form-control teachers select2">
                             @foreach ($teachers as $teacher)
-                                <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                <option @if (in_array($teacher->id,$routine->exam_duties->pluck('teacher_id')->toArray()))
+selected
+                                @endif value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                             @endforeach
                         </select>
                         @error("teacher")
@@ -127,13 +149,11 @@
                 @enderror
                     </div>
                 </div>
-                <div class="col-md-1">
-                    <div style="margin-top: 2rem !important;">
-                        <button id="removeId" class="btn btn-sm btn-danger">X</button>
-                    </div>
-
-                </div>
             </div>
+            @php
+                $i++;
+            @endphp
+            @endforeach
             <div class="extra"></div>
             <div class="row">
                 <div class="col-md-3">
@@ -167,12 +187,23 @@
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
     <!-- Page Specific JS File -->
     <script>
-        var course = "<option value=''>Select Any</option>";
-        var count = 0;
+        var courseS ={!! json_encode($courses->toArray()) !!};
+        var course = "<option value=''>Select one </option>";
+        var count = {{$i}};
+
+        function addC(){
+            var c = "";
+            courseS.forEach(element => {
+                c += "<option value='"+element.id+"'>"+element.course_code+"-"+element.course_name+"</option>";
+            });
+            course = c;
+        }
+        addC();
         function add(){
-            count++;
+
             // e.preventDefault();
             $(".extra").append(`<div class="row">
+                <input type="hidden" name="routine_id[`+count+`]">
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Exam Date</label>
@@ -205,6 +236,7 @@
             </div>`);
             $(".extra .row .datepicker").last().daterangepicker({locale: {format: 'YYYY-MM-DD'},singleDatePicker: true,autoApply: true,});
             $(".extra .row").last().find(".select2").select2();
+            count++;
         }
 
 

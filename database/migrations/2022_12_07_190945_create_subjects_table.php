@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('course_name');
             $table->string('course_code');
-            $table->date('year');
-            $table->string('semester');
-            $table->foreignId("batch_id")->constrained()->onDelete('cascade');
+            $table->tinyInteger('year');
+            $table->tinyInteger('semester');
+            $table->foreignId("department_id")->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
