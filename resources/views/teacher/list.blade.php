@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Batch List')
+@section('title', 'Teacher List')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -28,29 +28,37 @@
                             <th class="text-center">
                                 #
                             </th>
-                            <th>Batch Name</th>
-                            <th>Department Name</th>
-                            <th>Session</th>
+                            <th>Teacher Name</th>
+                            <th>Title</th>
+                            <th>Department</th>
+                            <th>Conatact</th>
+                            <th>Email</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($batches as $batch)
+                        @foreach ($teachers as $teacher)
                         <tr>
                             <td>
 
                             </td>
                             <td>
-                                {{ $batch->name }}
+                                {{ $teacher->name }}
                             </td>
                             <td>
-                                {{ $batch->department->name }}
+                                {{ $teacher->title }}
                             </td>
                             <td>
-                                {{ $batch->session }}
+                                {{ $teacher->department->name }}
                             </td>
                             <td>
-                                <form action="{{ route('batch.destroy',$batch->id) }}" method="Post">
+                                {{ $teacher->contact }}
+                            </td>
+                            <td>
+                                {{ $teacher->email }}
+                            </td>
+                            <td>
+                                <form action="{{ route('teacher.destroy',$teacher->id) }}" method="Post">
 
                                     {{-- <a href="{{ route('department.edit',$department->id) }}" class="btn btn-success">Edit</a> --}}
                                     @csrf

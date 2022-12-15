@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Add Batch')
+@section('title', 'Add Subject')
 
 @push('style')
 <link rel="stylesheet"
@@ -9,7 +9,7 @@ href="{{ asset('library/select2/dist/css/select2.min.css') }}">
 
 @section('main')
 
-<form action="{{route('batch.store')}}" method="POST">
+<form action="{{route('subject.store')}}" method="POST">
     @csrf
 
     <div class="card">
@@ -19,10 +19,34 @@ href="{{ asset('library/select2/dist/css/select2.min.css') }}">
         <div class="card-body">
 
             <div class="form-group">
-                <label>Batch Name</label>
-                 <input type="text" value="{{old('name')}}" name="name" class="form-control">
+                <label>Course Name</label>
+                 <input type="text" value="{{old('course_name')}}" name="course_name" class="form-control">
 
-                @error('name')
+                @error('course_name')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label>Course Code</label>
+                <input type="text" value="{{old('course_code')}}" name="course_code" class="form-control">
+
+                @error('course_code')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label>Year</label>
+                 <input type="integer" value="{{old('year')}}" name="year" class="form-control">
+
+                @error('year')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label>Semester</label>
+                 <input type="integer" value="{{old('semester')}}" name="semester" class="form-control">
+
+                @error('semester')
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>
@@ -36,14 +60,6 @@ href="{{ asset('library/select2/dist/css/select2.min.css') }}">
                 </select>
 
                 @error('department_id')
-                    <div class="text-danger">{{$message}}</div>
-                @enderror
-            </div>
-            <div class="form-group">
-                <label>Session</label>
-                 <input type="text" value="{{old('session')}}" name="session" class="form-control">
-
-                @error('session')
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>

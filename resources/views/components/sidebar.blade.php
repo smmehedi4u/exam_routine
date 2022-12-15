@@ -25,6 +25,14 @@ $links = [
                     ['href' => 'batch.index', 'text' => 'List', 'has_permission' => true],
                 ],
             ],
+
+            [
+                'section_text' => 'Subject',
+                'section_list' => [
+                    ['href' => 'subject.create', 'text' => 'Add', 'has_permission' => true],
+                    ['href' => 'subject.index', 'text' => 'List', 'has_permission' => true],
+                ],
+            ],
         ],
         'text' => 'Department',
         'is_multi' => true,
@@ -48,6 +56,20 @@ $links = [
             ],
         ],
         'text' => 'Routine',
+        'is_multi' => true,
+        'has_permission' => true,
+],
+[
+        'href' => [
+            [
+                'section_text' => 'Teacher',
+                'section_list' => [
+                    ['href' => 'teacher.create', 'text' => 'Add', 'has_permission' => true],
+                    ['href' => 'teacher.index', 'text' => 'List', 'has_permission' => true],
+                ],
+            ],
+        ],
+        'text' => 'User',
         'is_multi' => true,
         'has_permission' => true,
 ]

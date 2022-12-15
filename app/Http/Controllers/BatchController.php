@@ -6,6 +6,8 @@ use App\Models\Department;
 use App\Models\Batch;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Validator;
+
 class BatchController extends Controller
 {
     /**
@@ -15,8 +17,9 @@ class BatchController extends Controller
      */
     public function index()
     {
+        $departments = Department::all();
         $batches = Batch::all();
-        return view("batch.list", compact('batches'));
+        return view("batch.list", compact('batches','departments'));
     }
 
     /**

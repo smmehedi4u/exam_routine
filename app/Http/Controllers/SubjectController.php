@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subject;
+use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SubjectController extends Controller
 {
@@ -14,7 +16,9 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        //
+        $departments = Department::all();
+        $subjects = Subject::all();
+        return view("subject.list", compact('subjects','departments'));
     }
 
     /**
@@ -24,7 +28,8 @@ class SubjectController extends Controller
      */
     public function create()
     {
-        //
+        $departments = Department::all();
+        return view("subject.add", compact('departments'));
     }
 
     /**
@@ -35,7 +40,35 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'course_name' => 'required',
+            'course_code' => 'required',
+            'year' => 'required',
+            'semester' => 'required',
+            'department_id' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $subjects = new Subject();
+
+        $subjects->course_name = $request->course_name;
+        $subjects->course_code = $request->course_code;
+        $subjects->year = $request->year;
+        $subjects->semester = $request->semester;
+        $subjects->department_id = $request->department_id;
+        $subjects->save();
+
+        $request->session()->flash('success', 'Subject added successfully!');
+
+        return back();
     }
 
     /**
@@ -46,7 +79,7 @@ class SubjectController extends Controller
      */
     public function show(Subject $subject)
     {
-        //
+        return view('subject.show');
     }
 
     /**
@@ -69,7 +102,32 @@ class SubjectController extends Controller
      */
     public function update(Request $request, Subject $subject)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'course_name' => 'required',
+            'course_code' => 'required',
+            'year' => 'required',
+            'semester' => 'required',
+            'department_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $subjects = Subject::find($id);
+
+        $subjects->course_name = $request->course_name;
+        $subjects->course_code = $request->course_code;
+        $subjects->year = $request->year;
+        $subjects->semester = $request->semester;
+        $subjects->department_id = $request->department_id;
+        $subjects->save();
+
+        return redirect()->route('subject.list')->with('success','Subject update successfully');
     }
 
     /**
@@ -80,7 +138,8 @@ class SubjectController extends Controller
      */
     public function destroy(Subject $subject)
     {
-        //
+        $subject->delete();
+        return redirect()->back()->with("success","Deleted");
     }
 
     public function byDept(Request $request, $dept_id)
