@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('course_name');
+            $table->string('course_name'); 
             $table->string('course_code');
             $table->tinyInteger('year');
             $table->tinyInteger('semester');

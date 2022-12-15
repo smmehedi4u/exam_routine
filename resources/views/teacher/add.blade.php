@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Add Batch')
+@section('title', 'Add Teacher')
 
 @push('style')
 <link rel="stylesheet"
@@ -9,7 +9,7 @@ href="{{ asset('library/select2/dist/css/select2.min.css') }}">
 
 @section('main')
 
-<form action="{{route('batch.store')}}" method="POST">
+<form action="{{route('teacher.store')}}" method="POST">
     @csrf
 
     <div class="card">
@@ -19,10 +19,18 @@ href="{{ asset('library/select2/dist/css/select2.min.css') }}">
         <div class="card-body">
 
             <div class="form-group">
-                <label>Batch Name</label>
+                <label>Name</label>
                  <input type="text" value="{{old('name')}}" name="name" class="form-control">
 
                 @error('name')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" value="{{old('title')}}" name="title" class="form-control">
+
+                @error('title')
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>
@@ -40,10 +48,18 @@ href="{{ asset('library/select2/dist/css/select2.min.css') }}">
                 @enderror
             </div>
             <div class="form-group">
-                <label>Session</label>
-                 <input type="text" value="{{old('session')}}" name="session" class="form-control">
+                <label>Contact</label>
+                 <input type="text" value="{{old('contact')}}" name="contact" class="form-control">
 
-                @error('session')
+                @error('contact')
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                 <input type="email" value="{{old('email')}}" name="email" class="form-control">
+
+                @error('email')
                     <div class="text-danger">{{$message}}</div>
                 @enderror
             </div>

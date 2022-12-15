@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
+use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TeacherController extends Controller
 {
@@ -14,7 +16,9 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        //
+        $departments = Department::all();
+        $teachers = Teacher::all();
+        return view("teacher.list", compact('teachers','departments'));
     }
 
     /**
@@ -24,7 +28,8 @@ class TeacherController extends Controller
      */
     public function create()
     {
-        //
+        $departments = Department::all();
+        return view("teacher.add", compact('departments'));
     }
 
     /**
@@ -35,7 +40,35 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'title' => 'required',
+            'department_id' => 'required',
+            'contact' => 'required',
+            'email' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $teachers = new Teacher();
+
+        $teachers->name = $request->name;
+        $teachers->title = $request->title;
+        $teachers->department_id = $request->department_id;
+        $teachers->contact = $request->contact;
+        $teachers->email = $request->email;
+        $teachers->save();
+
+        $request->session()->flash('success', 'Teacher added successfully!');
+
+        return back();
     }
 
     /**
@@ -46,7 +79,7 @@ class TeacherController extends Controller
      */
     public function show(Teacher $teacher)
     {
-        //
+        return view('teacher.show');
     }
 
     /**
@@ -69,7 +102,32 @@ class TeacherController extends Controller
      */
     public function update(Request $request, Teacher $teacher)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'title' => 'required',
+            'department_id' => 'required',
+            'contact' => 'required',
+            'email' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $teachers = Teacher::find($id);
+
+        $teachers->name = $request->name;
+        $teachers->title = $request->title;
+        $teachers->department_id = $request->department_id;
+        $teachers->contact = $request->contact;
+        $teachers->email = $request->email;
+        $teachers->save();
+
+        return redirect()->route('teacher.list')->with('success','Teacher update successfully');
     }
 
     /**
@@ -80,6 +138,7 @@ class TeacherController extends Controller
      */
     public function destroy(Teacher $teacher)
     {
-        //
+        $teacher->delete();
+        return redirect()->back()->with("success","Deleted");
     }
 }

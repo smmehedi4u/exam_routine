@@ -227,9 +227,8 @@ class ExamController extends Controller
      * @param  \App\Models\Exam  $exam
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Exam $exam, $id)
+    public function destroy(Exam $exam)
     {
-
         $exam->delete();
         return redirect()->back()->with("success", "Deleted Successfully.");
     }

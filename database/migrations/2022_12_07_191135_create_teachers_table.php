@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create("teachers", function (Blueprint $table) {
-            $table->id();
+        Schema::create("teachers", function (Blueprint $table) { 
             $table->string('name');
             $table->string('title');
             $table->foreignId("department_id")->constrained()->onDelete('cascade');
             $table->string('contact');
             $table->string('email');
             $table->timestamps();
-            $table->softDeletes(); 
+            $table->softDeletes();
         });
     }
 
