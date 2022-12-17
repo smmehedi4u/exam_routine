@@ -76,19 +76,25 @@ class PasswordController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
-            'password' => 'required|min:6|max:16|string|confirmed',
-            'password_confirmation' => 'required',
-        ]);
+            'password' => 'required | min:6 | max:16 | confirmed ',
+            'password_confirmation' => 'required|min:6'
 
-        //$user=Auth::user();
+        ]);
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $user=Auth::user();
         if (Hash::check($request->current_password, Auth::user()->password)) {
 
-            // $user->password=Hash::make($request->password);
-            // $user->save();
+            $user->password=Hash::make($request->password);
+            $user->save();
 
-            $data=array();
-            $data['password']=Hash::make($request->password);
-            DB::table('users')->where('id',Auth::id())->update($data);
+            // $data=array();
+            // $data['password']=Hash::make($request->password);
+            // DB::table('users')->where('id',Auth::id())->update($data);
             return redirect()->back()->with('success','Password changed successfully');
 
         }else{

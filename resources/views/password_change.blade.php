@@ -28,17 +28,13 @@
         @endif
 
         <form method="POST" action="{{route('update.password')}}">
-            {{ csrf_field() }}
-
-
+           @csrf
 
             <div class="form-group">
                 <label for="email">Current Password</label>
-                <input id="email" type="password" value="{{ old('current_password') }}" class="form-control"
-                    name="current_password" tabindex="1" required="" autofocus="">
-                <div class="invalid-feedback">
-                    Please fill in your email
-                </div>
+                <input type="password" value="{{ old('current_password') }}" class="form-control"
+                    name="current_password" tabindex="1" required autofocus="">
+
 
                 @error('current_password')
                     <div class="text-danger">{{$message}}</div>
@@ -50,10 +46,8 @@
                     <label for="password" class="control-label">New Password</label>
                 </div>
                 <input id="password" type="password" class="form-control" name="password" tabindex="2"
-                    required="">
-                <div class="invalid-feedback">
-                    please fill in your password
-                </div>
+                    @error('password') is-invalid @enderror required>
+
 
                 @error('password')
                     <div class="text-danger">{{$message}}</div>
@@ -61,16 +55,9 @@
             </div>
 
             <div class="form-group">
-                <label for="email">Confirm Password</label>
-                <input id="email" type="password" class="form-control"
-                    name="password_confirmation" tabindex="1" required="" autofocus="">
-                <div class="invalid-feedback">
-                    Please fill in your password
-                </div>
-
-                @error('password_confirmation')
-                    <div class="text-danger">{{$message}}</div>
-                @enderror
+                <label>Confirm Password</label>
+                <input type="password" class="form-control"
+                    name="password_confirmation" tabindex="1" required autofocus="">
             </div>
 
             <div class="form-group">
