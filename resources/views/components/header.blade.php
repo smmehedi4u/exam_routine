@@ -112,6 +112,10 @@
                     class="dropdown-item has-icon">
                     <i class="fas fa-cog"></i> Settings
                 </a>
+                <a href="{{route('password.change')}}"
+                    class="dropdown-item has-icon">
+                    <i class="fas fa-unlock"></i> Password Change
+                </a>
                 <div class="dropdown-divider"></div>
                 <a href="{{route('logout')}}"
                     class="dropdown-item has-icon text-danger">
