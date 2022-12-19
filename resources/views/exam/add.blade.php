@@ -94,7 +94,7 @@
             </div>
             <hr>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label>Exam Date</label>
                         <input required name="exam_date[0]" type="text" class="form-control datepicker">
@@ -103,7 +103,20 @@
                     <div class="text-danger">{{$message}}</div>
                 @enderror
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Exam Hall</label>
+                        <select required name="hall[0]" class="form-control select2">
+                            @foreach ($halls as $hall)
+                                <option value="{{ $hall->id }}">{{ $hall->name }}</option>
+                            @endforeach
+                        </select>
+                        @error("hall")
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+                    </div>
+                </div>
+                <div class="col-md-2">
                     <div class="form-group">
                         <label>Course</label>
                         <select required name="course[0]" class="form-control course select2">
@@ -114,7 +127,21 @@
                 @enderror
                     </div>
                 </div>
-                <div class="col-md-5">
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Supervisor</label>
+                        <select required name="supervisor[0]" class="form-control select2">
+                            @foreach ($teachers as $teacher)
+                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                        @endforeach
+                        </select>
+                        @error("supervisor")
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Teacher</label>
                         <select required name="teacher[0][]" multiple="" class="form-control teachers select2">
@@ -173,19 +200,45 @@
             count++;
             // e.preventDefault();
             $(".extra").append(`<div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label>Exam Date</label>
                         <input required name="exam_date[`+count+`]" type="text" class="form-control datepicker">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Exam Hall</label>
+                        <select required name="hall[`+count+`]" class="form-control select2">
+                            @foreach ($halls as $hall)
+                                <option value="{{ $hall->id }}">{{ $hall->name }}</option>
+                            @endforeach
+                        </select>
+                        @error("hall")
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+                    </div>
+                </div>
+                <div class="col-md-2">
                     <div class="form-group">
                         <label>Course</label>
                         <select required name="course[`+count+`]" class="form-control course select2">`+course+`</select>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Supervisor</label>
+                        <select required name="supervisor[`+count+`]" class="form-control select2">
+                            @foreach ($teachers as $teacher)
+                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                        @endforeach
+                        </select>
+                        @error("supervisor")
+                    <div class="text-danger">{{$message}}</div>
+                @enderror
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Teacher</label>
                         <select required name="teacher[`+count+`][]" multiple="" class="form-control teacher select2">

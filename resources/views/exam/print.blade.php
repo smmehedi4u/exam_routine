@@ -155,30 +155,45 @@
             </div>
         </div>
         <table border="1"
-            style="width:100%;border-collapse:collapse;text-align:center;margin:15px 10px;">
+            style="font-size:12px;width:100%;border-collapse:collapse;text-align:center;margin:15px 10px;">
             <thead>
                 <tr>
-                    <th style="padding: 10px;" colspan="3">Department of {{ $exam->batch->department->name }}</th>
+                    <th style="padding: 10px;" colspan="7">Department of {{ $exam->batch->department->name }}</th>
                 </tr>
                 <tr>
                     <th style="padding: 10px;">Name</th>
-                    <th style="padding: 10px;">Course Code</th>
+                    <th style="padding: 10px;">Signature</th>
+                    <th style="padding: 10px;">Course Code/Name</th>
                     <th style="padding: 10px;">Exam Date</th>
+                    <th style="padding: 10px;">Exam Hall</th>
+                    <th style="padding: 10px;">Exam Hall Supervisor</th>
+                    <th style="padding: 10px;">Signature</th>
                     {{-- <th style="padding: 10px;">Exam Time</th> --}}
                 </tr>
             </thead>
             <tbody>
-                @foreach ($exam->routines as $routine)
+                @foreach ($routines as $routine)
                 <tr>
                     <td style="padding: 10px;">
-                        @foreach ($routine->exam_duties as $duty)
-                            {{$duty->teacher->name}}<br>
-                        @endforeach
+                        {{$routine->exam_duties[0]->teacher->name}}
                     </td>
-                    <td style="padding: 10px;">{{$routine->subject->course_code}}</td>
-                    <td style="padding: 10px;">{{$routine->exam_date}}</td>
+                    <td style="padding: 10px;"></td>
+                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">
+                        {{$routine->subject->course_code}}<br>
+                        {{$routine->subject->course_name}}
+                    </td>
+                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">{{$routine->exam_date}}</td>
+                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">{{$routine->exam_center->name}}</td>
+                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">{{$routine->teacher->name}}</td>
+                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;"></td>
                     {{-- <td style="padding: 10px;">{{$routine->exam_time}}</td> --}}
                 </tr>
+                @for ($i=1;$i<$routine->exam_duties_count;$i++)
+                    <tr>
+                        <td>{{$routine->exam_duties[$i]->teacher->name}}</td>
+                        <td style="padding: 10px;"></td>
+                    </tr>
+                @endfor
                 @endforeach
             </tbody>
         </table>

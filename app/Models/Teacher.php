@@ -26,4 +26,8 @@ class Teacher extends Model
     {
         return $this->hasMany(ExamDuty::class);
     }
+    public function routines()
+    {
+        return $this->hasMany(Routine::class);
+    }
 }

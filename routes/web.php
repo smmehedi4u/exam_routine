@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BatchController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ExamCenterController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoutineController;
@@ -50,7 +51,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource("exam", ExamController::class);
 
-    Route::resource("routine", RoutineController::class);
+    Route::resource("exam_center", ExamCenterController::class);
     Route::resource("subject", SubjectController::class);
     Route::prefix("/subject")->name("subject.")->group(function () {
         Route::get("/bydept/{dept_id}", [SubjectController::class, "byDept"])->name("bydept");
