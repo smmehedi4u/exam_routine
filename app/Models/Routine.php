@@ -14,6 +14,8 @@ class Routine extends Model
         'subject_id',
         'exam_date',
         'exam_time',
+        'exam_center_id',
+        'teacher_id',
     ];
 
     public function subject()
@@ -28,5 +30,14 @@ class Routine extends Model
     public function exam_duties()
     {
         return $this->hasMany(ExamDuty::class);
+    }
+
+    public function exam_center()
+    {
+        return $this->belongsTo(ExamCenter::class);
+    }
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
     }
 }

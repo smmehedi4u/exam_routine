@@ -32,6 +32,23 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        \App\Models\ExamCenter::factory()->create(
+            [
+                "name" => "Multipurpose"
+            ]
+        );
+        \App\Models\ExamCenter::factory()->create(
+            [
+                "name" => "CSE 403"
+            ]
+        );
+
+        \App\Models\ExamCenter::factory()->create(
+            [
+                "name" => "CSE 404"
+            ]
+        );
+
         \App\Models\Batch::factory(10)->create();
         \App\Models\Subject::factory(100)->create();
         \App\Models\Teacher::factory(40)->create();

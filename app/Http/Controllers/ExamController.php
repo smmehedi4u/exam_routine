@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Batch;
 use App\Models\Department;
 use App\Models\Exam;
+use App\Models\ExamCenter;
 use App\Models\ExamDuty;
 use App\Models\Routine;
 use App\Models\Subject;
@@ -37,8 +38,9 @@ class ExamController extends Controller
     {
         $depts = Department::orderBy("id", "desc")->get();
         $teachers = Teacher::orderBy("id", "desc")->get();
+        $halls = ExamCenter::all();
         // dd($batches);
-        return view("exam.add", compact("depts", "teachers"));
+        return view("exam.add", compact("depts", "teachers", "halls"));
     }
 
     /**
@@ -60,6 +62,8 @@ class ExamController extends Controller
             'semester' => 'required',
             'exam_date.*' => 'required',
             'course.*' => 'required',
+            'hall.*' => 'required',
+            'supervisor.*' => 'required',
             'teacher.*' => 'required',
         ]);
         // dd($request->all());
@@ -78,12 +82,18 @@ class ExamController extends Controller
             $exam_dates = $request->exam_date;
             $courses = $request->course;
             $teachers = $request->teacher;
+            $halls = $request->hall;
+            $supervisor = $request->supervisor;
+
 
             foreach ($exam_dates as $key => $val) {
+                // dd($halls[$key]);
                 $r = Routine::create([
                     'exam_id' => $exam->id,
                     'subject_id' => $courses[$key],
                     'exam_date' => $val,
+                    'exam_center_id' => $halls[$key],
+                    'teacher_id' => $supervisor[$key],
                     'exam_time' => "10:00",
                 ]);
 
@@ -128,12 +138,13 @@ class ExamController extends Controller
         $batches = Batch::where("department_id", $exam->batch->department_id)->orderBy("id", "desc")->get();
         $courses = Subject::where("department_id", $exam->batch->department_id)->orderBy("id", "desc")->get();
         $teachers = Teacher::orderBy("id", "desc")->get();
+        $halls = ExamCenter::all();
         // foreach ($exam->routines as $routine) {
         //     dd($routine->exam_duties->pluck('teacher_id'));
         // }
         // dd($courses->toArray());
 
-        return view("exam.edit", compact("exam", "depts", "teachers", "batches", "courses"));
+        return view("exam.edit", compact("exam", "depts", "teachers", "batches", "courses", "halls"));
 
     }
 
@@ -158,6 +169,8 @@ class ExamController extends Controller
             'exam_date.*' => 'required',
             'course.*' => 'required',
             'teacher.*' => 'required',
+            'hall.*' => 'required',
+            'supervisor.*' => 'required',
         ]);
         // dd($request->all());
         DB::beginTransaction();
@@ -177,12 +190,18 @@ class ExamController extends Controller
             $courses = $request->course;
             $teachers = $request->teacher;
 
+            $halls = $request->hall;
+            $supervisor = $request->supervisor;
+
             foreach ($exam_dates as $key => $val) {
                 if ($routine_id[$key] == null) {
                     $r = Routine::create([
                         'exam_id' => $exam->id,
                         'subject_id' => $courses[$key],
                         'exam_date' => $val,
+
+                        'exam_center_id' => $halls[$key],
+                        'teacher_id' => $supervisor[$key],
                         'exam_time' => "10:00",
                     ]);
 
@@ -196,6 +215,8 @@ class ExamController extends Controller
                     Routine::where("id", $routine_id[$key])->update([
                         'subject_id' => $courses[$key],
                         'exam_date' => $val,
+                        'exam_center_id' => $halls[$key],
+                        'teacher_id' => $supervisor[$key],
                         'exam_time' => "10:00",
                     ]);
                     $r = Routine::where("id", $routine_id[$key])->first();
@@ -236,8 +257,13 @@ class ExamController extends Controller
     public function print(Exam $exam)
     {
         $data = [
-            "exam" => $exam
+            "exam" => $exam,
+            "routines" => Routine::with("teacher:id,name", "exam_center:id,name", "subject:id,course_name,course_code", "exam_duties.teacher:id,name")
+                ->withCount("exam_duties")
+                ->where("exam_id", $exam->id)
+                ->get(),
         ];
+        // dd($data['routines']);
         $pdf = PDF::loadView('exam.print', $data);
         return $pdf->stream('document.pdf');
         // return view("exam.print", compact("exam"));

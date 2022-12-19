@@ -33,6 +33,13 @@ $links = [
                     ['href' => 'subject.index', 'text' => 'List', 'has_permission' => true],
                 ],
             ],
+            [
+                'section_text' => 'Exam Hall',
+                'section_list' => [
+                    ['href' => 'exam_center.create', 'text' => 'Add', 'has_permission' => true],
+                    ['href' => 'exam_center.index', 'text' => 'List', 'has_permission' => true],
+                ],
+            ],
         ],
         'text' => 'Department',
         'is_multi' => true,
@@ -45,13 +52,6 @@ $links = [
                 'section_list' => [
                     ['href' => 'exam.create', 'text' => 'Add', 'has_permission' => true],
                     ['href' => 'exam.index', 'text' => 'List', 'has_permission' => true],
-                ],
-            ],
-            [
-                'section_text' => 'Routine',
-                'section_list' => [
-                    ['href' => 'routine.create', 'text' => 'Add', 'has_permission' => true],
-                    ['href' => 'routine.index', 'text' => 'List', 'has_permission' => true],
                 ],
             ],
         ],
