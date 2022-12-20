@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreExamCenterRequest;
 use App\Http\Requests\UpdateExamCenterRequest;
 use App\Models\ExamCenter;
+use Illuminate\Support\Facades\Validator;
 
 class ExamCenterController extends Controller
 {
@@ -15,7 +16,8 @@ class ExamCenterController extends Controller
      */
     public function index()
     {
-        //
+        $examCenters = ExamCenter::all();
+        return view("examCenter.list", compact('examCenters'));
     }
 
     /**
@@ -25,7 +27,7 @@ class ExamCenterController extends Controller
      */
     public function create()
     {
-        //
+        return view("examCenter.add");
     }
 
     /**
@@ -36,7 +38,12 @@ class ExamCenterController extends Controller
      */
     public function store(StoreExamCenterRequest $request)
     {
-        //
+
+        ExamCenter::create($request->all());
+
+        $request->session()->flash('success', 'Exam center added successfully!');
+
+        return back();
     }
 
     /**
@@ -47,7 +54,7 @@ class ExamCenterController extends Controller
      */
     public function show(ExamCenter $examCenter)
     {
-        //
+        return view('examCenter.show');
     }
 
     /**
@@ -58,7 +65,8 @@ class ExamCenterController extends Controller
      */
     public function edit(ExamCenter $examCenter)
     {
-        //
+
+        return view('examCenter.edit',compact('examCenter'));
     }
 
     /**
@@ -70,7 +78,9 @@ class ExamCenterController extends Controller
      */
     public function update(UpdateExamCenterRequest $request, ExamCenter $examCenter)
     {
-        //
+        $examCenter->update($request->all());
+
+        return redirect()->route('exam_center.index')->with('success','Exam Center update successfully');
     }
 
     /**
@@ -81,6 +91,7 @@ class ExamCenterController extends Controller
      */
     public function destroy(ExamCenter $examCenter)
     {
-        //
+        $examCenter->delete();
+        return redirect()->back()->with("success","Deleted");
     }
 }
