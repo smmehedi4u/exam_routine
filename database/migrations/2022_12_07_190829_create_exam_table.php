@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->year('exam_year');
             $table->string('type');
-            $table->foreignId("batch_id")->constrained()->onDelete('cascade');
-            $table->string('year');
-            $table->string('semester');
+            // $table->foreignId("batch_id")->constrained()->onDelete('cascade');
+            $table->tinyInteger('year');
+            $table->tinyInteger('semester');
             $table->timestamps();
             $table->softDeletes();
         });

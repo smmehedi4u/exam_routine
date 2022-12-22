@@ -22,12 +22,18 @@ class Teacher extends Model
         return $this->belongsTo(Department::class);
     }
 
-    public function exam_duties()
+    public function invigilation_duties()
     {
-        return $this->hasMany(ExamDuty::class);
+        return $this->belongsToMany(Routine::class, "exam_duties", "teacher_id", "routine_id");
     }
+    public function supervising_duties()
+    {
+        return $this->belongsToMany(Routine::class, "routine_supervisor", "teacher_id", "routine_id");
+    }
+
     public function routines()
     {
         return $this->hasMany(Routine::class);
     }
+
 }

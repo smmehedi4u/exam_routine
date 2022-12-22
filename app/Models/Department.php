@@ -25,7 +25,7 @@ class Department extends Model
         return $this->hasMany(Subject::class);
     }
 
-    public function teacher()
+    public function teachers()
     {
         return $this->hasMany(Teacher::class);
     }

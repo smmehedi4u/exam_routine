@@ -14,7 +14,7 @@ class Exam extends Model
         'name',
         'exam_year',
         'type',
-        'batch_id',
+        // 'batch_id',
         "year",
         'semester',
     ];

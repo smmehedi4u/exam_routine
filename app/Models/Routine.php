@@ -11,16 +11,16 @@ class Routine extends Model
 
     protected $fillable = [
         'exam_id',
-        'subject_id',
+        // 'subject_id',
         'exam_date',
         'exam_time',
         'exam_center_id',
-        'teacher_id',
+        // 'teacher_id',
     ];
 
-    public function subject()
+    public function subjects()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsToMany(Subject::class, "routine_subject", "routine_id", "subject_id");
     }
     public function exam()
     {
@@ -36,8 +36,13 @@ class Routine extends Model
     {
         return $this->belongsTo(ExamCenter::class);
     }
-    public function teacher()
+    public function supervisors()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsToMany(Teacher::class, "routine_supervisor", "routine_id", "teacher_id");
+    }
+
+    public function teachers()
+    {
+        return $this->belongsToMany(Teacher::class, "exam_duties", "routine_id", "teacher_id");
     }
 }

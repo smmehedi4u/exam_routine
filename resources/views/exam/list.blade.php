@@ -31,7 +31,6 @@
                             </th>
                             <th>Exam Name</th>
                             <th>Exam Year</th>
-                            <th>Batch</th>
                             <th>Year</th>
                             <th>Semester</th>
                             <th>Action</th>
@@ -49,9 +48,6 @@
                                 <td>{{ $exam->name }}</td>
                                 <td class="align-middle">
                                     {{ $exam->exam_year }}
-                                </td>
-                                <td>
-                                    {{ $exam->batch->name }}
                                 </td>
                                 <td>{{ $exam->year }}</td>
                                 <td>

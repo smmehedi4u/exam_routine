@@ -10,6 +10,7 @@ use App\Models\ExamDuty;
 use App\Models\Routine;
 use App\Models\Subject;
 use App\Models\Teacher;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
@@ -23,7 +24,7 @@ class ExamController extends Controller
     public function index()
     {
 
-        $exams = Exam::with("batch:id,name")->orderBy("id", "desc")->get();
+        $exams = Exam::orderBy("id", "desc")->get();
         // dd($exams->toArray());
         return view("exam.list", compact("exams"));
 
@@ -36,11 +37,12 @@ class ExamController extends Controller
      */
     public function create()
     {
-        $depts = Department::orderBy("id", "desc")->get();
+        // $depts = Department::orderBy("id", "desc")->get();
         $teachers = Teacher::orderBy("id", "desc")->get();
         $halls = ExamCenter::all();
+        $subjects = Subject::all();
         // dd($batches);
-        return view("exam.add", compact("depts", "teachers", "halls"));
+        return view("exam.add", compact("teachers", "halls", "subjects"));
     }
 
     /**
@@ -56,8 +58,8 @@ class ExamController extends Controller
             'exam_name' => 'required',
             'exam_year' => 'required',
             'exam_type' => 'required',
-            'department' => 'required',
-            'batch' => 'required',
+            // 'department' => 'required',
+            // 'batch' => 'required',
             'year' => 'required',
             'semester' => 'required',
             'exam_date.*' => 'required',
@@ -75,7 +77,7 @@ class ExamController extends Controller
                 'name' => $request->exam_name,
                 'exam_year' => $request->exam_year,
                 'type' => $request->exam_type,
-                'batch_id' => $request->batch,
+                // 'batch_id' => $request->batch,
                 'year' => $request->year,
                 'semester' => $request->semester,
             ]);
@@ -83,26 +85,28 @@ class ExamController extends Controller
             $courses = $request->course;
             $teachers = $request->teacher;
             $halls = $request->hall;
-            $supervisor = $request->supervisor;
+            $supervisors = $request->supervisor;
 
 
             foreach ($exam_dates as $key => $val) {
                 // dd($halls[$key]);
                 $r = Routine::create([
                     'exam_id' => $exam->id,
-                    'subject_id' => $courses[$key],
                     'exam_date' => $val,
                     'exam_center_id' => $halls[$key],
-                    'teacher_id' => $supervisor[$key],
                     'exam_time' => "10:00",
                 ]);
 
-                foreach ($teachers[$key] as $value) {
-                    ExamDuty::create([
-                        'teacher_id' => $value,
-                        'routine_id' => $r->id
-                    ]);
-                }
+                $r->teachers()->sync($teachers[$key]);
+                $r->supervisors()->sync($supervisors[$key]);
+                $r->subjects()->sync($courses[$key]);
+
+                // foreach ($teachers[$key] as $value) {
+                //     ExamDuty::create([
+                //         'teacher_id' => $value,
+                //         'routine_id' => $r->id
+                //     ]);
+                // }
             }
             DB::commit();
             return redirect()->back()->with("success", "Added successfully. Navigate To list page for print.");
@@ -134,9 +138,9 @@ class ExamController extends Controller
     {
 
 
-        $depts = Department::orderBy("id", "desc")->get();
-        $batches = Batch::where("department_id", $exam->batch->department_id)->orderBy("id", "desc")->get();
-        $courses = Subject::where("department_id", $exam->batch->department_id)->orderBy("id", "desc")->get();
+        // $depts = Department::orderBy("id", "desc")->get();
+        // $batches = Batch::orderBy("id", "desc")->get();
+        $courses = Subject::orderBy("id", "desc")->get();
         $teachers = Teacher::orderBy("id", "desc")->get();
         $halls = ExamCenter::all();
         // foreach ($exam->routines as $routine) {
@@ -144,7 +148,7 @@ class ExamController extends Controller
         // }
         // dd($courses->toArray());
 
-        return view("exam.edit", compact("exam", "depts", "teachers", "batches", "courses", "halls"));
+        return view("exam.edit", compact("exam", "teachers", "courses", "halls"));
 
     }
 
@@ -162,8 +166,8 @@ class ExamController extends Controller
             'exam_name' => 'required',
             'exam_year' => 'required',
             'exam_type' => 'required',
-            'department' => 'required',
-            'batch' => 'required',
+            // 'department' => 'required',
+            // 'batch' => 'required',
             'year' => 'required',
             'semester' => 'required',
             'exam_date.*' => 'required',
@@ -181,7 +185,7 @@ class ExamController extends Controller
                 'name' => $request->exam_name,
                 'exam_year' => $request->exam_year,
                 'type' => $request->exam_type,
-                'batch_id' => $request->batch,
+                // 'batch_id' => $request->batch,
                 'year' => $request->year,
                 'semester' => $request->semester,
             ]);
@@ -191,46 +195,36 @@ class ExamController extends Controller
             $teachers = $request->teacher;
 
             $halls = $request->hall;
-            $supervisor = $request->supervisor;
+            $supervisors = $request->supervisor;
 
             foreach ($exam_dates as $key => $val) {
                 if ($routine_id[$key] == null) {
-                    $r = Routine::create([
-                        'exam_id' => $exam->id,
-                        'subject_id' => $courses[$key],
+                    $r = Routine::create(['exam_id' => $exam->id,
                         'exam_date' => $val,
-
                         'exam_center_id' => $halls[$key],
-                        'teacher_id' => $supervisor[$key],
                         'exam_time' => "10:00",
                     ]);
 
-                    foreach ($teachers[$key] as $value) {
-                        ExamDuty::create([
-                            'teacher_id' => $value,
-                            'routine_id' => $r->id
-                        ]);
-                    }
+                    $r->teachers()->sync($teachers[$key]);
+                    $r->supervisors()->sync($supervisors[$key]);
+                    $r->subjects()->sync($courses[$key]);
+
                 } else {
                     Routine::where("id", $routine_id[$key])->update([
-                        'subject_id' => $courses[$key],
+                        // 'subject_id' => $courses[$key],
                         'exam_date' => $val,
                         'exam_center_id' => $halls[$key],
-                        'teacher_id' => $supervisor[$key],
+                        // 'teacher_id' => $supervisor[$key],
                         'exam_time' => "10:00",
                     ]);
                     $r = Routine::where("id", $routine_id[$key])->first();
                     // dd($r);
 
 
-                    ExamDuty::where("routine_id", $r->id)->delete();
+                    $r->teachers()->sync($teachers[$key]);
+                    $r->supervisors()->sync($supervisors[$key]);
+                    $r->subjects()->sync($courses[$key]);
 
-                    foreach ($teachers[$key] as $value) {
-                        ExamDuty::create([
-                            'teacher_id' => $value,
-                            'routine_id' => $r->id
-                        ]);
-                    }
                 }
             }
             DB::commit();
@@ -258,15 +252,48 @@ class ExamController extends Controller
     {
         $data = [
             "exam" => $exam,
-            "routines" => Routine::with("teacher:id,name", "exam_center:id,name", "subject:id,course_name,course_code", "exam_duties.teacher:id,name")
+            "routines" => Routine::with("supervisors:id,name", "exam_center:id,name", "subjects:id,course_name,course_code", "teachers:id,name")
                 ->withCount("exam_duties")
                 ->where("exam_id", $exam->id)
                 ->get(),
         ];
-        // dd($data['routines']);
+
+        // dd($data['routines']->toArray());
         $pdf = PDF::loadView('exam.print', $data);
         return $pdf->stream('document.pdf');
         // return view("exam.print", compact("exam"));
 
+    }
+
+    public function report(Request $request)
+    {
+
+        return view("exam.report");
+    }
+
+    public function printreport(Request $request)
+    {
+        $validated = $request->validate([
+            'from_date' => 'required',
+            'to_date' => 'required',
+            'type' => 'required',
+        ]);
+
+        $from = $request->from_date;
+        $to = $request->to_date;
+        $type = $request->type;
+
+        $depts = Department::with(["teachers"])->get();
+        $data = [
+            "depts" => $depts,
+            "type" => $type,
+            "from" => $from,
+            "to" => $to
+        ];
+
+
+
+        $pdf = PDF::loadView('exam.printreport', $data);
+        return $pdf->stream('document.pdf');
     }
 }
