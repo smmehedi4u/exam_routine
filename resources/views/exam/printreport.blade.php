@@ -151,61 +151,59 @@
                 alt="logo"
                 width="100"
             >
-            <h4>{{ $exam->type }}-{{ $exam->exam_year }}</h4>
             <h4>Faridpur Enginnering College, Faridpur</h4>
-            <h4>Schedule for Invigilation</h4>
-            <div style="margin: 2px;font-size:12px;">
-            <p>Exam Time: 10:00AM - 01:00PM</p>
-            </div>
+            <p>{{date("d/m/Y",strtotime($from))}} to {{date("d/m/Y",strtotime($to))}}</p>
         </div>
         <table border="1"
             style="font-size:10px;width:100%;border-collapse:collapse;text-align:center;margin:15px 10px;">
-            <thead>
+            @foreach ($depts as $dept)
+
                 <tr>
-                    <th style="padding: 10px;" colspan="7">Department of CSE/EEE/CIVIL</th>
+                    <th style="padding: 10px;" colspan="2">Department of {{$dept->name}}</th>
                 </tr>
                 <tr>
-                    <th style="padding: 10px;">Name</th>
-                    <th style="padding: 10px;">Signature</th>
-                    <th style="padding: 10px;">Course Code/Name</th>
-                    <th style="padding: 10px;">Exam Date</th>
-                    <th style="padding: 10px;">Exam Hall</th>
-                    <th style="padding: 10px;">Exam Hall Supervisor</th>
-                    <th style="padding: 10px;">Signature</th>
-                    {{-- <th style="padding: 10px;">Exam Time</th> --}}
+                    <th style="padding: 10px;">Name / Designation</th>
+                    <th style="padding: 10px;">Number of
+                        @if ($type==1)
+                        Invisilation
+                        @else
+                        Supervision
+                        @endif
+                    </th>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($routines as $routine)
+
+                @foreach ($dept->teachers as $teacher)
                 <tr>
                     <td style="padding: 10px;">
-                        {{$routine->exam_duties[0]->teacher->name}}
-                    </td>
-                    <td style="padding: 10px;"></td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">
-                        @foreach ($routine->subjects as $subject)
-                        {{$subject->course_code}}<br>
-                        {{$subject->course_name}}<br>
-                        @endforeach
-                    </td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">{{$routine->exam_date}}</td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">{{$routine->exam_center->name}}</td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">
-                        @foreach ($routine->supervisors as $supervisor)
-                        {{$supervisor->name}}<br>
-                        @endforeach
-                    </td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;"></td>
-                    {{-- <td style="padding: 10px;">{{$routine->exam_time}}</td> --}}
+                        {{$teacher->name}}<br>
+                        {{$teacher->title}}
+                    </th>
+                    <td style="padding: 10px;">
+                        @if ($type==1)
+
+
+                        {{
+                            // \App\Models\Teacher::withCount("invigilation_duties"=>function($query) use ($from,$to) {
+                            //     $query->whereBetween("exam_date",[$from,$to]);
+                            // })->where("id",$teacher->id)->first()->invigilation_duties_count
+                            $teacher->invigilation_duties()->whereBetween("exam_date",[$from,$to])->count()
+                        }}
+                        @else
+                        {{
+                            // \App\Models\Teacher::withCount("supervising_duties"=>function($query) use ($from,$to) {
+                            //     $query->whereBetween("exam_date",[$from,$to]);
+                            // })->where("id",$teacher->id)->first()->invigilation_duties_count
+
+
+                            $teacher->supervising_duties()->whereBetween("exam_date",[$from,$to])->count()
+                        }}
+                        @endif
+                    </th>
+                    {{-- <th style="padding: 10px;">Exam Time</th> --}}
                 </tr>
-                @for ($i=1;$i<$routine->exam_duties_count;$i++)
-                    <tr>
-                        <td style="padding: 10px;">{{$routine->teachers[$i]->name}}</td>
-                        <td style="padding: 10px;"></td>
-                    </tr>
-                @endfor
                 @endforeach
-            </tbody>
+
+            @endforeach
         </table>
         <br><br><br>
         <table style="width:100%;text-align:right;">

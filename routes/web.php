@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix("/exam")->name("exam.")->group(function () {
         Route::get("/print/{exam}", [ExamController::class, "print"])->name("print");
+        Route::get("/report", [ExamController::class, "report"])->name("report");
+        Route::post("/report", [ExamController::class, "printreport"])->name("printreport");
     });
     Route::resource("exam", ExamController::class);
 

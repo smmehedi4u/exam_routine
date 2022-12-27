@@ -22,8 +22,8 @@ class Subject extends Model
         return $this->belongsTo(Department::class);
     }
 
-    public function routine()
+    public function routines()
     {
-        return $this->hasMany(Routine::class);
+        return $this->belongsToMany(Routine::class);
     }
 }
