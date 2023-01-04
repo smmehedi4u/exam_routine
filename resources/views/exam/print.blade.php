@@ -132,13 +132,17 @@
             content: '';
             content: none;
         }
+
         h1,
         h2,
         h3,
         h4,
         h5,
-        h6{
+        h6 {
             margin-bottom: 2px;
+        }
+        table{
+            border-collapse: collapse;
         }
     </style>
 </head>
@@ -147,15 +151,12 @@
 <body>
     <div id="print_area">
         <div style="text-align:center;">
-            <img src="img/logo.png"
-                alt="logo"
-                width="100"
-            >
+            <img src="img/logo.png" alt="logo" width="100">
             <h4>{{ $exam->type }}-{{ $exam->exam_year }}</h4>
             <h4>Faridpur Enginnering College, Faridpur</h4>
             <h4>Schedule for Invigilation</h4>
             <div style="margin: 2px;font-size:12px;">
-            <p>Exam Time: 10:00AM - 01:00PM</p>
+                <p>Exam Time: 10:00AM - 01:00PM</p>
             </div>
         </div>
         <table border="1"
@@ -177,33 +178,45 @@
             </thead>
             <tbody>
                 @foreach ($routines as $routine)
-                <tr>
-                    <td style="padding: 10px;">
-                        {{$routine->exam_duties[0]->teacher->name}}
-                    </td>
-                    <td style="padding: 10px;"></td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">
-                        @foreach ($routine->subjects as $subject)
-                        {{$subject->course_code}}<br>
-                        {{$subject->course_name}}<br>
-                        @endforeach
-                    </td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">{{$routine->exam_date}}</td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">{{$routine->exam_center->name}}</td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;">
-                        @foreach ($routine->supervisors as $supervisor)
-                        {{$supervisor->name}}<br>
-                        @endforeach
-                    </td>
-                    <td rowspan="{{$routine->exam_duties_count}}" style="padding: 10px;"></td>
-                    {{-- <td style="padding: 10px;">{{$routine->exam_time}}</td> --}}
-                </tr>
-                @for ($i=1;$i<$routine->exam_duties_count;$i++)
                     <tr>
-                        <td style="padding: 10px;">{{$routine->teachers[$i]->name}}</td>
-                        <td style="padding: 10px;"></td>
+                        <td>
+                            <table width="100%" height="100%" border="1">
+
+                                @for ($i = 0; $i < $routine->exam_duties_count; $i++)
+                                    <tr>
+                                        <td height="36px" style="padding: 10px;">{{ $routine->teachers[$i]->name }}</td>
+                                    </tr>
+                                @endfor
+                            </table>
+                        </td>
+                        <td>
+                            <table width="100%" height="100%" border="1">
+
+                                @for ($i = 0; $i < $routine->exam_duties_count; $i++)
+                                    <tr>
+                                        <td height="36px" style="padding: 10px;"></td>
+                                    </tr>
+                                @endfor
+                            </table>
+                        </td>
+                        <td  style="padding: 10px;">
+                            @foreach ($routine->subjects as $subject)
+                                {{ $subject->course_code }}<br>
+                                {{ $subject->course_name }}<br>
+                            @endforeach
+                        </td>
+                        <td  style="padding: 10px;">{{ $routine->exam_date }}
+                        </td>
+                        <td  style="padding: 10px;">
+                            {{ $routine->exam_center->name }}</td>
+                        <td  style="padding: 10px;">
+                            @foreach ($routine->supervisors as $supervisor)
+                                {{ $supervisor->name }}<br>
+                            @endforeach
+                        </td>
+                        <td  style="padding: 10px;"></td>
+                        {{-- <td style="padding: 10px;">{{$routine->exam_time}}</td> --}}
                     </tr>
-                @endfor
                 @endforeach
             </tbody>
         </table>

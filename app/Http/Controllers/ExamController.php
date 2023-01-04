@@ -261,6 +261,8 @@ class ExamController extends Controller
         // dd($data['routines']->toArray());
         $pdf = PDF::loadView('exam.print', $data);
         return $pdf->stream('document.pdf');
+        // return view("exam.print", $data);
+
         // return view("exam.print", compact("exam"));
 
     }
