@@ -6,12 +6,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "carlos-meneses/laravel-mpdf": "^2.1",
+        "carlos-meneses/laravel-mpdf": "*",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "mpdf/mpdf": "^8.1",
+        "mpdf/mpdf": "*",
         "psr/log": "^2.0"
     },
     "require-dev": {

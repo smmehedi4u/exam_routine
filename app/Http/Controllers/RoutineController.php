@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExamCenter;
 use App\Models\Routine;
+use App\Models\Subject;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 
 class RoutineController extends Controller
@@ -59,7 +62,10 @@ class RoutineController extends Controller
      */
     public function edit(Routine $routine)
     {
-        //
+        $courses = Subject::orderBy("id", "desc")->get();
+        $teachers = Teacher::orderBy("id", "desc")->get();
+        $halls = ExamCenter::all();
+        return view("routine.edit",compact("routine","teachers", "courses", "halls"));
     }
 
     /**
@@ -71,7 +77,26 @@ class RoutineController extends Controller
      */
     public function update(Request $request, Routine $routine)
     {
-        //
+        $validated = $request->validate([
+
+            'exam_date' => 'required',
+            'course' => 'required',
+            'teacher' => 'required',
+            'hall' => 'required',
+            'supervisor' => 'required',
+        ]);
+
+
+$routine->update([
+    'exam_date' => $request->exam_date,
+    'exam_center_id' => $request->hall,
+]);
+        $routine->teachers()->sync($request->teacher);
+        $routine->supervisors()->sync($request->supervisor);
+        $routine->subjects()->sync($request->course);
+
+
+        return redirect(route("exam.show",$routine->exam_id))->with("success","Updated successfully.");
     }
 
     /**
@@ -82,6 +107,7 @@ class RoutineController extends Controller
      */
     public function destroy(Routine $routine)
     {
-        //
+        $routine->delete();
+        return back()->with("success","Delete successfully.");
     }
 }

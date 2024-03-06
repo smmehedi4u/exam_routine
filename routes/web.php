@@ -52,7 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::post("/report", [ExamController::class, "printreport"])->name("printreport");
     });
     Route::resource("exam", ExamController::class);
-
+    Route::resource("routine", RoutineController::class);
     Route::resource("exam_center", ExamCenterController::class);
     Route::resource("subject", SubjectController::class);
     Route::prefix("/subject")->name("subject.")->group(function () {

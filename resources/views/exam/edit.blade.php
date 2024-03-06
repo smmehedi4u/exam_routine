@@ -9,7 +9,7 @@
 
 @section('main')
 
-    <form action="{{ route('exam.update', $exam) }}" method="POST">
+    <form action="{{ route('exam.update', $exam->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="card">
@@ -36,10 +36,10 @@
                 <div class="form-group">
                     <label>Exam Type</label>
                     <select required name="exam_type" class="form-control">
-                        <option @if ($exam->type == '1') selected @endif value="1">CT</option>
-                        <option @if ($exam->type == '2') selected @endif value="2">Semester Final</option>
+                        <option @if ($exam->type == 'CT') selected @endif value="1">CT</option>
+                        <option @if ($exam->type == "Semester Final") selected @endif value="2">Semester Final</option>
                     </select>
-                    @error('exam_year')
+                    @error('type')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
@@ -116,7 +116,7 @@
                                 <label>Exam Hall</label>
                                 <select required name="hall[{{ $i }}]" class="form-control select2">
                                     @foreach ($halls as $hall)
-                                        <option @if ($hall->exam_center_id == $hall->id) selected @endif
+                                        <option @if ($routine->exam_center_id == $hall->id) selected @endif
                                             value="{{ $hall->id }}">{{ $hall->name }}</option>
                                     @endforeach
                                 </select>
@@ -133,7 +133,7 @@
                                     @foreach ($courses as $course)
                                         <option @if (in_array(
                                             $course->id,
-                                            $routine->subjects()->pluck('subject_id')->toArray())) selected @endif
+                                            $routine->subjects->pluck('id')->toArray())) selected @endif
                                             value="{{ $course->id }}">
                                             {{ $course->course_code }}-{{ $course->course_name }}</option>
                                     @endforeach
@@ -151,7 +151,7 @@
                                     @foreach ($teachers as $teacher)
                                         <option @if (in_array(
                                             $teacher->id,
-                                            $routine->supervisors()->pluck('teacher_id')->toArray())) selected @endif
+                                            $routine->supervisors->pluck('id')->toArray())) selected @endif
                                             value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                     @endforeach
                                 </select>
@@ -168,7 +168,7 @@
                                     @foreach ($teachers as $teacher)
                                         <option @if (in_array(
                                             $teacher->id,
-                                            $routine->teachers()->pluck('teacher_id')->toArray())) selected @endif
+                                            $routine->teachers->pluck('id')->toArray())) selected @endif
                                             value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                     @endforeach
                                 </select>

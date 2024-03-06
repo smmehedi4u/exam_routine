@@ -125,6 +125,8 @@ class ExamController extends Controller
      */
     public function show(Exam $exam)
     {
+        $exam = $exam->load("routines","routines.exam_center","routines.teachers","routines.supervisors","routines.subjects");
+
         return view('exam.show',compact('exam'));
     }
 
@@ -147,7 +149,13 @@ class ExamController extends Controller
         //     dd($routine->exam_duties->pluck('teacher_id'));
         // }
         // dd($courses->toArray());
+        $exam = Exam::with([
+        "routines"=>fn($q)=>$q->orderBy("exam_date"),
+        "routines.teachers",
+        "routines.supervisors",
+        "routines.subjects"])->whereId($exam->id)->first();
 
+        // dd($exam);
         return view("exam.edit", compact("exam", "teachers", "courses", "halls"));
 
     }
@@ -255,6 +263,7 @@ class ExamController extends Controller
             "routines" => Routine::with("supervisors:id,name", "exam_center:id,name", "subjects:id,course_name,course_code", "teachers:id,name")
                 ->withCount("exam_duties")
                 ->where("exam_id", $exam->id)
+                ->orderBy("exam_date")
                 ->get(),
         ];
 

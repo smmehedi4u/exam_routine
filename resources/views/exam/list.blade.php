@@ -57,6 +57,8 @@
                                     <a href="{{ route('exam.print', $exam) }}" class="btn btn-sm btn-warning"><i class="fa-solid fa-print"></i></a>
                                     <a href="{{ route('exam.edit', $exam) }}" class="btn btn-sm btn-info"><i class="fa-solid fa-pen"></i></a>
 
+                                    <a href="{{ route('exam.show', $exam) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-eye"></i></a>
+
                                     <form action="{{ route('exam.destroy', $exam) }}" method="post">
                                         @csrf
                                         @method('DELETE')
